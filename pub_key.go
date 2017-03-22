@@ -32,7 +32,7 @@ func init() {
 
 // PubKey add json serialization to PubKeyInner
 type PubKey struct {
-	PubKeyInner
+	PubKeyInner `json:"unwrap"`
 }
 
 func WrapPubKey(pk PubKeyInner) PubKey {
