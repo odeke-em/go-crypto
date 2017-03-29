@@ -12,7 +12,14 @@ import (
 	"golang.org/x/crypto/ripemd160"
 )
 
-// PubKeyInner is now the interface itself, use PubKey struct in all code
+/*
+DO NOT USE this interface.
+
+It is public by necessity but should never be used directly
+outside of this package.
+
+Only use the PubKey, never the PubKeyInner
+*/
 type PubKeyInner interface {
 	Address() []byte
 	Bytes() []byte
@@ -30,11 +37,13 @@ func init() {
 		RegisterImplementation(PubKeySecp256k1{}, NameSecp256k1, TypeSecp256k1)
 }
 
-// PubKey add json serialization to PubKeyInner
+// PubKey should be used instead of an interface in all external packages
+// unless you demand a concrete implementation, then use that directly.
 type PubKey struct {
 	PubKeyInner `json:"unwrap"`
 }
 
+// WrapPubKey goes from concrete implementation to "interface" struct
 func WrapPubKey(pk PubKeyInner) PubKey {
 	if wrap, ok := pk.(PubKey); ok {
 		pk = wrap.Unwrap()
@@ -42,6 +51,7 @@ func WrapPubKey(pk PubKeyInner) PubKey {
 	return PubKey{pk}
 }
 
+// Unwrap recovers the concrete interface safely (regardless of levels of embeds)
 func (p PubKey) Unwrap() PubKeyInner {
 	pk := p.PubKeyInner
 	for wrap, ok := pk.(PubKey); ok; wrap, ok = pk.(PubKey) {
