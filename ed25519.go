@@ -28,10 +28,6 @@ type PrivKeyEd25519 [64]byte
 
 func (privKey PrivKeyEd25519) AssertIsPrivKeyInner() {}
 
-func (privKey PrivKeyEd25519) Bytes() []byte {
-	return wire.BinaryBytes(PrivKey{privKey})
-}
-
 func (privKey PrivKeyEd25519) Sign(msg []byte) Signature {
 	privKeyBytes := [64]byte(privKey)
 	signatureBytes := ed25519.Sign(&privKeyBytes, msg)
@@ -128,10 +124,6 @@ func (pubKey PubKeyEd25519) Address() []byte {
 	return hasher.Sum(nil)
 }
 
-func (pubKey PubKeyEd25519) Bytes() []byte {
-	return wire.BinaryBytes(PubKey{pubKey})
-}
-
 func (pubKey PubKeyEd25519) VerifyBytes(msg []byte, sig_ Signature) bool {
 	// make sure we use the same algorithm to sign
 	sig, ok := sig_.Unwrap().(SignatureEd25519)
@@ -195,10 +187,6 @@ var _ SignatureInner = SignatureEd25519{}
 type SignatureEd25519 [64]byte
 
 func (sig SignatureEd25519) AssertIsSignatureInner() {}
-
-func (sig SignatureEd25519) Bytes() []byte {
-	return wire.BinaryBytes(Signature{sig})
-}
 
 func (sig SignatureEd25519) IsZero() bool { return len(sig) == 0 }
 

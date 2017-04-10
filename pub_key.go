@@ -23,11 +23,14 @@ var pubKeyMapper = data.NewMapper(PubKey{})
 type PubKeyInner interface {
 	AssertIsPubKeyInner()
 	Address() []byte
-	Bytes() []byte
 	KeyString() string
 	VerifyBytes(msg []byte, sig Signature) bool
 	Equals(PubKey) bool
 	Wrap() PubKey
+}
+
+func (p PubKey) Bytes() []byte {
+	return wire.BinaryBytes(p)
 }
 
 func (pk PubKey) MarshalJSON() ([]byte, error) {

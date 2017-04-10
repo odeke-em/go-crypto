@@ -22,11 +22,14 @@ var privKeyMapper = data.NewMapper(PrivKey{})
 // You probably want to use PubKey
 type PrivKeyInner interface {
 	AssertIsPrivKeyInner()
-	Bytes() []byte
 	Sign(msg []byte) Signature
 	PubKey() PubKey
 	Equals(PrivKey) bool
 	Wrap() PrivKey
+}
+
+func (p PrivKey) Bytes() []byte {
+	return wire.BinaryBytes(p)
 }
 
 func (p PrivKey) MarshalJSON() ([]byte, error) {

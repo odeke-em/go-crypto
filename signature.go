@@ -22,11 +22,14 @@ var sigMapper = data.NewMapper(Signature{})
 // You probably want to use Signature.
 type SignatureInner interface {
 	AssertIsSignatureInner()
-	Bytes() []byte
 	IsZero() bool
 	String() string
 	Equals(Signature) bool
 	Wrap() Signature
+}
+
+func (s Signature) Bytes() []byte {
+	return wire.BinaryBytes(s)
 }
 
 func (sig Signature) MarshalJSON() ([]byte, error) {
@@ -51,5 +54,5 @@ func (sig Signature) Unwrap() SignatureInner {
 }
 
 func (sig Signature) Empty() bool {
-	return sig.SignatureInner == nil
+	return sig.SignatureInner == nil || sig.IsZero()
 }

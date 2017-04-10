@@ -10,7 +10,6 @@ import (
 	secp256k1 "github.com/btcsuite/btcd/btcec"
 	cmn "github.com/tendermint/go-common"
 	data "github.com/tendermint/go-data"
-	wire "github.com/tendermint/go-wire"
 )
 
 func init() {
@@ -27,10 +26,6 @@ var _ PrivKeyInner = PrivKeySecp256k1{}
 type PrivKeySecp256k1 [32]byte
 
 func (privKey PrivKeySecp256k1) AssertIsPrivKeyInner() {}
-
-func (privKey PrivKeySecp256k1) Bytes() []byte {
-	return wire.BinaryBytes(PrivKey{privKey})
-}
 
 func (privKey PrivKeySecp256k1) Sign(msg []byte) Signature {
 	priv__, _ := secp256k1.PrivKeyFromBytes(secp256k1.S256(), privKey[:])
@@ -128,10 +123,6 @@ func (pubKey PubKeySecp256k1) Address() []byte {
 	return hasherRIPEMD160.Sum(nil)
 }
 
-func (pubKey PubKeySecp256k1) Bytes() []byte {
-	return wire.BinaryBytes(PubKey{pubKey})
-}
-
 func (pubKey PubKeySecp256k1) VerifyBytes(msg []byte, sig_ Signature) bool {
 	// and assert same algorithm to sign and verify
 	sig, ok := sig_.Unwrap().(SignatureSecp256k1)
@@ -191,10 +182,6 @@ var _ SignatureInner = SignatureSecp256k1{}
 type SignatureSecp256k1 []byte
 
 func (sig SignatureSecp256k1) AssertIsSignatureInner() {}
-
-func (sig SignatureSecp256k1) Bytes() []byte {
-	return wire.BinaryBytes(Signature{sig})
-}
 
 func (sig SignatureSecp256k1) IsZero() bool { return len(sig) == 0 }
 
