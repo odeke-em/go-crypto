@@ -5,10 +5,6 @@ GOTOOLS = \
 	github.com/jteeuwen/go-bindata/go-bindata
 REPO:=github.com/tendermint/go-crypto
 
-docs:
-	@go get github.com/davecheney/godoc2md
-	godoc2md $(REPO) > README.md
-
 all: get_vendor_deps install test
 
 install:
